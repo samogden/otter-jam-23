@@ -73,7 +73,7 @@ class OpenAIInterface(object):
     response = openai.Image.create_variation(
       image=last_image,
       n=1,
-      size="512x512",
+      size=size,
       response_format="b64_json"
     )
     cls.cost_tracker.report_run({}, model, size)
@@ -166,6 +166,9 @@ def main():
   OpenAIInterface.get_api_key()
   print("Starting adventure....")
   adventure_hook = "I am entering a fantasy tavern to talk to the bartender about getting a cup of ale and possibly some quests.  The bartender, played by the assistant, has a gruff personality but is willing to take my money."
+  
+  
+  adventure_hook = "I am entering the captains cabin of a pirate ship looking to be hired on.  The captain, played by the assistant, is a cruel man, but interested in any special skills I may have that can aid him and his crew."
   
   run_adventure(adventure_hook)
   
