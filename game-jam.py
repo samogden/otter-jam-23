@@ -116,33 +116,41 @@ class Conversation(object):
         break
       elif msg.strip().lower() == "show me":
         last_message = self.messages[-1]["content"]
-        prompt = OpenAIInterface.get_image_prompt(f"Make me a 100 word description of an image based on: {last_message}")
-        image_buffer = OpenAIInterface.get_image(f"{prompt[:1000]}")
+        prompt = OpenAIInterface.get_image_prompt(
+          f"Make me a 100 word description of an image based on: {last_message}"
+          )
+        image_buffer = OpenAIInterface.get_image(
+          f"{prompt[:1000]}"
+        )
         img = Image.open(image_buffer)
         img.show()
       else:
         resp = self.send_msg(msg)
         print(resp)
-      logging.info(f"Total cost: ${OpenAIInterface.cost_tracker.cumulative_cost : 0.6f}")
+      logging.info(
+        f"Total cost: ${OpenAIInterface.cost_tracker.cumulative_cost : 0.6f}"
+        )
 
 
 def run_adventure(adventure_hook):
   
   # Generate some background
   background = Conversation(adventure_hook)
-  description = background.send_msg("In 100 words or less, describe the appearance of the bartender.")
+  description = background.send_msg("In 100 words or less, describe the appearance of the assistant.")
   image_buffer = OpenAIInterface.get_image(description)
   img = Image.open(image_buffer)
   img.show()
-  description = background.send_msg("In 100 words or less, describe the appearance of the bartender and the bar.")
+  description = background.send_msg("In 100 words or less, describe the appearance of the assistant and the location.")
   
-  
-  
-  conversation_hook = background.send_msg(f"{adventure_hook}.  The bar can be described as: {description}")
+  # Get an initial introduction to show the user
+  conversation_hook = background.send_msg(f"{adventure_hook}.  The scene can be described as: {description}")
   print(conversation_hook)
+  
+  # Start the users new adventure and ask them for input
   conversation = Conversation(conversation_hook)
   conversation.conversation_loop()
   
+  # Potentially come back to the bar
   continue_answer = input("Would you like to continue your adventure? (y/n) ")
   if continue_answer.lower()[0] == "y":
     summary = conversation.summary
