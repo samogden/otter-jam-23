@@ -6,11 +6,6 @@ from typing import Dict
 import openai
 import os
 
-def read_api_key():
-  config = configparser.ConfigParser()
-  config.read(os.path.join(os.path.expanduser("~/.config/openai")))
-  openai.api_key = config["DEFAULT"]["OPENAI_API_KEY"]
-
 class CostTracker(object):
   
   models = {
